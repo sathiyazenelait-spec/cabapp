@@ -1,0 +1,41 @@
+server:
+  port: ${PORT:8085}
+
+spring:
+  application:
+    name: backend-parent
+
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:cab_management_db}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:Sathiya@123}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250655368566D5970}
+    expiration-ms: ${JWT_EXPIRATION_MS:604800000}
+
+razorpay:
+  key:
+    id: ${RAZORPAY_KEY_ID:rzp_test_mockKeyId123}
+    secret: ${RAZORPAY_KEY_SECRET:mockKeySecret456789}
+
+aws:
+  s3:
+    bucket: ${AWS_S3_BUCKET:safepassage-documents}
+    region: ${AWS_REGION:ap-south-1}
+    accessKey: ${AWS_ACCESS_KEY:mock_aws_access_key}
+    secretKey: ${AWS_SECRET_KEY:mock_aws_secret_key}
+
+fcm:
+  serverKey: ${FCM_SERVER_KEY:mock_fcm_server_key}

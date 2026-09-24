@@ -1,0 +1,36 @@
+server:
+  port: ${PORT:8082}
+
+spring:
+  application:
+    name: backend-super-admin
+
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:cab_management_db}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:Sathiya@123}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  sql:
+    init:
+      mode: always
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250655368566D5970}
+    expiration-ms: ${JWT_EXPIRATION_MS:604800000}
+
+sms:
+  provider: ${SMS_PROVIDER:mock}
+  apiKey: ${SMS_API_KEY:mock_sms_key}
+
