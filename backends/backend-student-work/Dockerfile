@@ -1,0 +1,15 @@
+# Multi-stage Docker build for backend-student-work
+FROM eclipse-temurin:17-jdk-alpine AS builder
+WORKDIR /app
+COPY .mvn/ .mvn/
+COPY mvnw pom.xml ./
+RUN chmod +x mvnw && ./mvnw dependency:go-offline -B
+COPY src/ src/
+RUN ./mvnw clean package -DskipTests -B
+
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
+ENV JAVA_OPTS="-Xms200m -Xmx450m"
+EXPOSE 8086
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

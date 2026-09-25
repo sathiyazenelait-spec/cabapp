@@ -1,0 +1,84 @@
+services:
+  # 1. Super Admin Service
+  - type: web
+    name: safepassage-super-admin
+    runtime: docker
+    dockerfilePath: ./backends/backend-super-admin/Dockerfile
+    dockerContext: ./backends/backend-super-admin
+    plan: free
+    region: singapore
+    envVars:
+      - key: PORT
+        value: 8082
+      - key: DB_HOST
+        value: gateway01.ap-southeast-1.prod.aws.tidbcloud.com
+      - key: DB_PORT
+        value: 4000
+      - key: DB_NAME
+        value: cab_management_db
+      - key: DB_USER
+        value: 23WUPEUn2RaJBza.root
+      - key: DB_PASSWORD
+        value: MX3QHQY0pJwpmF6p
+      - key: REDIS_HOST
+        value: magical-shark-297507.upstash.io
+      - key: REDIS_PORT
+        value: 6379
+      - key: REDIS_PASSWORD
+        value: gQAAAAAABIojAAIgcDE0NTljNmMxYjQwOWY0Yjg3YjdmZTMxY2MzNWJjZmUxNA
+
+  # 2. Parent Service
+  - type: web
+    name: safepassage-parent-api
+    runtime: docker
+    dockerfilePath: ./backends/backend-parent/Dockerfile
+    dockerContext: ./backends/backend-parent
+    plan: free
+    region: singapore
+    envVars:
+      - key: PORT
+        value: 8085
+      - key: DB_HOST
+        value: gateway01.ap-southeast-1.prod.aws.tidbcloud.com
+      - key: DB_PORT
+        value: 4000
+      - key: DB_NAME
+        value: cab_management_db
+      - key: DB_USER
+        value: 23WUPEUn2RaJBza.root
+      - key: DB_PASSWORD
+        value: MX3QHQY0pJwpmF6p
+      - key: REDIS_HOST
+        value: magical-shark-297507.upstash.io
+      - key: REDIS_PORT
+        value: 6379
+      - key: REDIS_PASSWORD
+        value: gQAAAAAABIojAAIgcDE0NTljNmMxYjQwOWY0Yjg3YjdmZTMxY2MzNWJjZmUxNA
+
+  # 3. Driver Service
+  - type: web
+    name: safepassage-driver-api
+    runtime: docker
+    dockerfilePath: ./backends/backend-driver/Dockerfile
+    dockerContext: ./backends/backend-driver
+    plan: free
+    region: singapore
+    envVars:
+      - key: PORT
+        value: 8084
+      - key: DB_HOST
+        value: gateway01.ap-southeast-1.prod.aws.tidbcloud.com
+      - key: DB_PORT
+        value: 4000
+      - key: DB_NAME
+        value: cab_management_db
+      - key: DB_USER
+        value: 23WUPEUn2RaJBza.root
+      - key: DB_PASSWORD
+        value: MX3QHQY0pJwpmF6p
+      - key: REDIS_HOST
+        value: magical-shark-297507.upstash.io
+      - key: REDIS_PORT
+        value: 6379
+      - key: REDIS_PASSWORD
+        value: gQAAAAAABIojAAIgcDE0NTljNmMxYjQwOWY0Yjg3YjdmZTMxY2MzNWJjZmUxNA
