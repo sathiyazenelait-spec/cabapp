@@ -6,9 +6,9 @@ spring:
     name: backend-parent
 
   datasource:
-    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:cab_management_db}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    username: ${DB_USER:root}
-    password: ${DB_PASSWORD:Sathiya@123}
+    url: jdbc:mysql://${DB_HOST:gateway01.ap-southeast-1.prod.aws.tidbcloud.com}:${DB_PORT:4000}/${DB_NAME:cab_management_db}?createDatabaseIfNotExist=true&useSSL=true&requireSSL=true&serverTimezone=UTC
+    username: ${DB_USER:23WUPEUn2RaJBza.root}
+    password: ${DB_PASSWORD:MX3QHQY0pJwpmF6p}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
