@@ -181,11 +181,40 @@ export const driverApi = {
 };
 
 export const singleTripApi = {
+  calculateFare: async (distanceKm = 2.0) => {
+    return safeFetch(`${API_BASE.PARENT}/api/parent/trip/single/calculate-fare`, {
+      method: 'POST',
+      body: JSON.stringify({ distanceKm }),
+    }, {
+      distanceKm,
+      fare: distanceKm <= 2.0 ? 35.0 : 35.0 + Math.round((distanceKm - 2.0) * 14.0),
+      baseFare: 35.0,
+      breakdown: distanceKm <= 2.0 ? '₹35 flat rate for first 2.0 km' : `₹35 base + ₹${Math.round((distanceKm - 2.0) * 14)} (${(distanceKm - 2.0).toFixed(1)} km @ ₹14/km)`
+    });
+  },
   acceptTrip: async (tripId: number | string, driverId = 1) => driverApi.acceptSingleTrip(tripId, driverId),
   declineTrip: async (tripId: number | string) => driverApi.declineSingleTrip(tripId),
   createMockTrip: async (driverId = 1) => driverApi.createMockSingleTrip(driverId),
   markArrived: async (tripId: number | string) => driverApi.markSingleTripArrived(tripId),
   verifyOtp: async (tripId: number | string, otp: string) => driverApi.verifySingleTripOtp(tripId, otp),
+  verifyDropOtp: async (tripId: number | string, dropOtp: string) => {
+    return safeFetch(`${API_BASE.PARENT}/api/parent/trip/single/verify-drop-otp`, {
+      method: 'POST',
+      body: JSON.stringify({ tripId, dropOtp }),
+    }, {
+      verified: true,
+      status: 'COMPLETED',
+      fare: 35.0,
+      upiQrPayload: 'upi://pay?pa=safepassage.driver@icici&pn=SafePassage+Fleet&am=35.00&cu=INR&tn=SingleTrip+Drop+Settlement',
+      message: 'Drop Verified'
+    });
+  },
+  completePayment: async (tripId: number | string, paymentMethod = 'RAZORPAY_QR') => {
+    return safeFetch(`${API_BASE.PARENT}/api/parent/trip/single/payment/complete`, {
+      method: 'POST',
+      body: JSON.stringify({ tripId, paymentMethod }),
+    }, { success: true, paymentStatus: 'PAID_' + paymentMethod.toUpperCase() });
+  },
   completeTrip: async (tripId: number | string) => driverApi.completeSingleTrip(tripId),
   getActiveTrip: async (driverId = 1) => driverApi.getActiveSingleTrip(driverId),
 };
@@ -254,77 +283,5 @@ export const parentApi = {
         { id: 'fc', title: 'Fitness Certificate', status: 'VERIFIED', verified: true },
       ],
     });
-  },
-};
-
-// -------------------------------------------------------------
-// SINGLE TRIP & ON-DEMAND DISPATCH APIS (:8085)
-// -------------------------------------------------------------
-export const singleTripApi = {
-  calculateFare: async (distanceKm = 2.0) => {
-    return safeFetch(`${API_BASE.PARENT}/api/parent/trip/single/calculate-fare`, {
-      method: 'POST',
-      body: JSON.stringify({ distanceKm }),
-    }, {
-      distanceKm,
-      fare: distanceKm <= 2.0 ? 35.0 : 35.0 + Math.round((distanceKm - 2.0) * 14.0),
-      baseFare: 35.0,
-      breakdown: distanceKm <= 2.0 ? '₹35 flat rate for first 2.0 km' : `₹35 base + ₹${Math.round((distanceKm - 2.0) * 14)} (${(distanceKm - 2.0).toFixed(1)} km @ ₹14/km)`
-    });
-  },
-
-  acceptTrip: async (tripId: number | string, driverId = 1) => {
-    return safeFetch(`${API_BASE.DRIVER}/api/driver/trip/accept`, {
-      method: 'POST',
-      body: JSON.stringify({ tripId, driverId }),
-    }, { success: true, status: 'ACCEPTED' });
-  },
-
-  declineTrip: async (tripId: number | string) => {
-    return safeFetch(`${API_BASE.DRIVER}/api/driver/trip/decline`, {
-      method: 'POST',
-      body: JSON.stringify({ tripId }),
-    }, { success: true, status: 'DECLINED' });
-  },
-
-  markArrived: async (tripId: number | string) => {
-    return safeFetch(`${API_BASE.DRIVER}/api/driver/trip/arrived`, {
-      method: 'POST',
-      body: JSON.stringify({ tripId }),
-    }, { success: true, status: 'ARRIVED' });
-  },
-
-  verifyOtp: async (tripId: number | string, otp: string) => {
-    return safeFetch(`${API_BASE.PARENT}/api/parent/trip/single/verify-pickup-otp`, {
-      method: 'POST',
-      body: JSON.stringify({ tripId, otp }),
-    }, { verified: true, status: 'IN_PROGRESS', message: 'Passenger Boarding Verified' });
-  },
-
-  verifyDropOtp: async (tripId: number | string, dropOtp: string) => {
-    return safeFetch(`${API_BASE.PARENT}/api/parent/trip/single/verify-drop-otp`, {
-      method: 'POST',
-      body: JSON.stringify({ tripId, dropOtp }),
-    }, {
-      verified: true,
-      status: 'COMPLETED',
-      fare: 35.0,
-      upiQrPayload: 'upi://pay?pa=safepassage.driver@icici&pn=SafePassage+Fleet&am=35.00&cu=INR&tn=SingleTrip+Drop+Settlement',
-      message: 'Drop Verified'
-    });
-  },
-
-  completePayment: async (tripId: number | string, paymentMethod = 'RAZORPAY_QR') => {
-    return safeFetch(`${API_BASE.PARENT}/api/parent/trip/single/payment/complete`, {
-      method: 'POST',
-      body: JSON.stringify({ tripId, paymentMethod }),
-    }, { success: true, paymentStatus: 'PAID_' + paymentMethod.toUpperCase() });
-  },
-
-  completeTrip: async (tripId: number | string) => {
-    return safeFetch(`${API_BASE.PARENT}/api/parent/trip/single/verify-drop-otp`, {
-      method: 'POST',
-      body: JSON.stringify({ tripId, dropOtp: '7429' }),
-    }, { success: true, status: 'COMPLETED', fare: 35.0 });
   },
 };
