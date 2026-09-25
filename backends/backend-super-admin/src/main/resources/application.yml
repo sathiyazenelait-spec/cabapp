@@ -21,6 +21,14 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
 
+  data:
+    redis:
+      host: ${REDIS_HOST:magical-shark-297507.upstash.io}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:gQAAAAAABIojAAIgcDE0NTljNmMxYjQwOWY0Yjg3YjdmZTMxY2MzNWJjZmUxNA}
+      ssl:
+        enabled: ${REDIS_SSL:true}
+
   sql:
     init:
       mode: always
