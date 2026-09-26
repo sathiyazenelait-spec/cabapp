@@ -34,10 +34,6 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/parent/files/**").permitAll() // allow public access to uploaded child photos
-                .requestMatchers("/api/parent/wallet/**").permitAll()
-                .requestMatchers("/api/parent/children/**").permitAll()
-                .requestMatchers("/api/parent/**").authenticated()
                 .anyRequest().permitAll()
             );
 
