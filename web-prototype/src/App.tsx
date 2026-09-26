@@ -71,7 +71,7 @@ import { ThreeVersionMapViewer } from './components/ThreeVersionMapViewer';
 import { PackageTripsModal } from './components/PackageTripsModal';
 import { SosEmergencyModal } from './components/SosEmergencyModal';
 import type { AppRole, UserSession, AdminAuthRequest } from './types/auth';
-import { adminApi, parentApi, driverApi, cabOwnerApi, studentWorkApi } from './services/api';
+import { API_BASE, adminApi, parentApi, driverApi, cabOwnerApi, studentWorkApi } from './services/api';
 
 // Types & Mock Data Definitions
 interface Driver {
@@ -469,18 +469,18 @@ export default function App() {
     if (!apiConnected) return;
     const fetchParentData = async () => {
       try {
-        const resWallet = await fetch('http://localhost:8085/api/parent/wallet?email=priya.sharma@gmail.com');
+        const resWallet = await fetch(`${API_BASE.PARENT}/api/parent/wallet?email=priya.sharma@gmail.com`);
         const dataWallet = await resWallet.json();
         if (dataWallet && dataWallet.balance !== undefined) {
           setParentWallet(dataWallet.balance);
         }
-        const resChildren = await fetch('http://localhost:8085/api/parent/children?email=priya.sharma@gmail.com');
+        const resChildren = await fetch(`${API_BASE.PARENT}/api/parent/children?email=priya.sharma@gmail.com`);
         const dataChildren = await resChildren.json();
         if (Array.isArray(dataChildren)) {
           setParentChildren(dataChildren);
         }
       } catch (e) {
-        console.warn("Spring Boot backend-parent service not running at localhost:8085 (using simulated fallback)");
+        console.warn(`Spring Boot backend-parent service at ${API_BASE.PARENT} unreachable (using simulated fallback)`);
       }
     };
     fetchParentData();
@@ -493,23 +493,23 @@ export default function App() {
     if (!apiConnected || activeRole !== 'admin') return;
     const fetchAdminData = async () => {
       try {
-        const resStats = await fetch('http://localhost:8082/api/dashboard/stats');
+        const resStats = await fetch(`${API_BASE.SUPER_ADMIN}/api/dashboard/stats`);
         const dataStats = await resStats.json();
         if (dataStats) setAdminStats(dataStats);
 
-        const resUsers = await fetch('http://localhost:8082/api/admin/users');
+        const resUsers = await fetch(`${API_BASE.SUPER_ADMIN}/api/admin/users`);
         const dataUsers = await resUsers.json();
         if (Array.isArray(dataUsers)) setAdminUsers(dataUsers);
 
-        const resVehicles = await fetch('http://localhost:8082/api/admin/vehicles');
+        const resVehicles = await fetch(`${API_BASE.SUPER_ADMIN}/api/admin/vehicles`);
         const dataVehicles = await resVehicles.json();
         if (Array.isArray(dataVehicles)) setAdminVehicles(dataVehicles);
 
-        const resComplaints = await fetch('http://localhost:8082/api/admin/complaints');
+        const resComplaints = await fetch(`${API_BASE.SUPER_ADMIN}/api/admin/complaints`);
         const dataComplaints = await resComplaints.json();
         if (Array.isArray(dataComplaints)) setAdminComplaints(dataComplaints);
       } catch (e) {
-        console.warn("Spring Boot backend-super-admin not running at localhost:8082 (using simulated fallback)");
+        console.warn(`Spring Boot backend-super-admin at ${API_BASE.SUPER_ADMIN} unreachable (using simulated fallback)`);
       }
     };
     fetchAdminData();
@@ -522,13 +522,13 @@ export default function App() {
     if (!apiConnected || parentStep !== 'track') return;
     const fetchGPSLocation = async () => {
       try {
-        const res = await fetch(`http://localhost:8084/api/driver/location?driverId=${selectedDriver ? selectedDriver.id : 'd1'}`);
+        const res = await fetch(`${API_BASE.DRIVER}/api/driver/location?driverId=${selectedDriver ? selectedDriver.id : 'd1'}`);
         const data = await res.json();
         if (data && data.latitude !== undefined) {
           setDriverGPS({ latitude: data.latitude, longitude: data.longitude });
         }
       } catch (e) {
-        console.warn("Spring Boot backend-driver location coordinates not running at localhost:8084 (using simulator path)");
+        console.warn(`Spring Boot backend-driver location at ${API_BASE.DRIVER} unreachable (using simulator path)`);
       }
     };
     fetchGPSLocation();

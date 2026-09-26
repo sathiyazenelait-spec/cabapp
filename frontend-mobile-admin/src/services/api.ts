@@ -1,14 +1,24 @@
 import { Platform } from 'react-native';
 
+export const USE_CLOUD_BACKEND = true;
+
 const HOST = Platform.OS === 'android' ? '10.0.2.2' : 'localhost';
 
-export const API_BASE = {
-  SUPER_ADMIN: `http://${HOST}:8082`,
-  CAB_OWNER: `http://${HOST}:8083`,
-  DRIVER: `http://${HOST}:8084`,
-  PARENT: `http://${HOST}:8085`,
-  STUDENT_WORK: `http://${HOST}:8086`,
-};
+export const API_BASE = USE_CLOUD_BACKEND
+  ? {
+      SUPER_ADMIN: 'https://safepassage-super-admin.onrender.com',
+      CAB_OWNER: 'https://safepassage-cab-owner-api.onrender.com',
+      DRIVER: 'https://safepassage-driver-api.onrender.com',
+      PARENT: 'https://safepassage-parent-api.onrender.com',
+      STUDENT_WORK: 'https://safepassage-student-work-api.onrender.com',
+    }
+  : {
+      SUPER_ADMIN: `http://${HOST}:8082`,
+      CAB_OWNER: `http://${HOST}:8083`,
+      DRIVER: `http://${HOST}:8084`,
+      PARENT: `http://${HOST}:8085`,
+      STUDENT_WORK: `http://${HOST}:8086`,
+    };
 
 let authToken: string | null = null;
 

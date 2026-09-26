@@ -50,3 +50,4 @@ pnpm-debug.log*
 Thumbs.db
 ~$*
 test_mvnw.log
+scratch/

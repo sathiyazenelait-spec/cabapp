@@ -1,11 +1,11 @@
 // Centralized API Client connecting to 5 Spring Boot Microservices + Unified MySQL Database
 
 export const API_BASE = {
-  SUPER_ADMIN: 'http://localhost:8082',
-  CAB_OWNER: 'http://localhost:8083',
-  DRIVER: 'http://localhost:8084',
-  PARENT: 'http://localhost:8085',
-  STUDENT_WORK: 'http://localhost:8086',
+  SUPER_ADMIN: (import.meta.env.VITE_SUPER_ADMIN_URL as string) || 'https://safepassage-super-admin.onrender.com',
+  CAB_OWNER: (import.meta.env.VITE_CAB_OWNER_URL as string) || 'https://safepassage-cab-owner-api.onrender.com',
+  DRIVER: (import.meta.env.VITE_DRIVER_URL as string) || 'https://safepassage-driver-api.onrender.com',
+  PARENT: (import.meta.env.VITE_PARENT_URL as string) || 'https://safepassage-parent-api.onrender.com',
+  STUDENT_WORK: (import.meta.env.VITE_STUDENT_WORK_URL as string) || 'https://safepassage-student-work-api.onrender.com',
 };
 
 async function safeFetch<T>(url: string, options?: RequestInit, fallbackData?: T): Promise<T> {
